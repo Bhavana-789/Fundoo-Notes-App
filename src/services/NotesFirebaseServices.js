@@ -22,20 +22,58 @@ export async function fetchnotesData() {
   return list;
 }
 
-export async function addNotes(id, title, note) {
-  let response = null;
+export async function addNotes(id, title, note, isPinned) {
+  let addedData = null;
   await firestore()
     .collection('notes')
     .add({
       userId: id,
       title: title,
       note: note,
+      isPinned,
     })
     .then(() => {
-      response = true;
+      addedData = true;
     })
     .catch(error => {
       console.log('Something went wrong');
     });
-  return response;
+  return addedData;
+}
+
+export async function deleteNote(notesId) {
+  await firestore()
+    .collection('notes')
+    .doc(notesId)
+    .delete()
+    .then(() => {
+      console.log('note deleted!');
+    })
+    .catch(e => {
+      console.log(e);
+    });
+
+  await firestore()
+    .collection('notes')
+    .doc(notesId)
+    .delete()
+    .then(() => {
+      console.log('note deleted');
+    });
+}
+
+export async function updateNote(notesId, title, note) {
+  await firestore()
+    .collection('notes')
+    .doc(notesId)
+    .update({
+      title: title,
+      note: note,
+    })
+    .then(() => {
+      console.log('note updated');
+    })
+    .catch(error => {
+      console.log(error);
+    });
 }

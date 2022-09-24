@@ -21,9 +21,9 @@ const HomeScreen = ({navigation}) => {
     getList();
   }, []);
   const getList = async () => {
-    let response = await fetchnotesData();
-    console.log(response);
-    setNotes(response);
+    let addedData = await fetchnotesData();
+    console.log(addedData);
+    setNotes(addedData);
   };
 
   // useEffect(() => {

@@ -20,15 +20,17 @@ const NoteScreen = ({navigation, route, item}) => {
 
   const [title, setTitle] = useState(data?.title || '');
   const [note, setNote] = useState(data?.note || '');
+  const [isPinned, setIsPinned] = useState(data?.isPinned || false);
 
-  const onBackPress = async notesId => {
+  const onBackPress = async () => {
     if (title !== '' || note !== '') {
-      let addedData = await addNotes(user.uid, title, note);
+      let addedData = await addNotes(user.uid, title, note, isPinned);
       if (addedData) {
         navigation.navigate('Home');
         console.log('Note Added');
         setTitle(null);
         setNote(null);
+        setIsPinned(false);
       }
     }
     // if (notesId) {
@@ -36,6 +38,10 @@ const NoteScreen = ({navigation, route, item}) => {
     //   console.log('notes id is:', notesId);
     // }
   };
+
+  function onPinHandle(params) {
+    setIsPinned(!isPinned);
+  }
 
   // firestore()
   //   .collection('notes')
@@ -61,8 +67,13 @@ const NoteScreen = ({navigation, route, item}) => {
           <Ionicons name="chevron-back" size={35} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={{marginLeft: 200, padding: 7}}>
-          <MaterialCommunityIcons name="pin-outline" size={25} />
+        <TouchableOpacity
+          onPress={onPinHandle}
+          style={{marginLeft: 200, padding: 7}}>
+          <MaterialCommunityIcons
+            name={isPinned ? 'pin' : 'pin-outline'}
+            size={25}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity style={{marginLeft: 10, padding: 6}}>
