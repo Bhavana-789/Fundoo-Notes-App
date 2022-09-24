@@ -4,16 +4,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
-import SignInScreen from '../screens/SignInScreen';
-import RegistrationScreen from '../screens/RegistrationScreen';
-import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
-import NewPasswordScreen from '../screens/NewPasswordScreen';
+import SignIn from '../screens/SignIn';
+import Registration from '../screens/Registration';
+import ForgotPassword from '../screens/ForgotPassword';
+import NewPassword from '../screens/NewPassword';
 
 import { AuthContext } from './AuthProvider';
 import auth from '@react-native-firebase/auth';
 import AppStack from './AppStack';
-import { ToggleButton } from 'react-native-paper';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+
 
 
 const Stack = createStackNavigator();
@@ -38,10 +37,10 @@ const Navigation = () => {
     <NavigationContainer>
       {!user ? (
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SignIn" component={SignInScreen} />
-        <Stack.Screen name="Register" component={RegistrationScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-        <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="Register" component={Registration} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="NewPassword" component={NewPassword} />
       </Stack.Navigator>
       ) :
       <AppStack/>

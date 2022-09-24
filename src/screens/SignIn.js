@@ -16,6 +16,7 @@ import {AuthContext} from '../navigation/AuthProvider';
 const SignInScreen = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const {login} = useContext(AuthContext);
 
@@ -27,6 +28,21 @@ const SignInScreen = ({navigation}) => {
 
   const onSignInFacebook = () => {
     console.warn('onSignInFacebook');
+  };
+
+  const onSignInPress = () => {
+    let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
+    let tempError = {};
+
+    if (username === '' || !reg.test(username)) {
+      tempError.firstname = 'please enter first name';
+    } else if (password === '') {
+      tempError.password = 'Please enter last name';
+    } else {
+      login(username, password);
+    }
+    setError(tempError);
+    console.log(tempError);
   };
 
   return (
@@ -50,9 +66,7 @@ const SignInScreen = ({navigation}) => {
           setValue={setPassword}
           secureTextEntry
         />
-        <CustomButton onPress={() => login(username, password)}>
-          Sign in
-        </CustomButton>
+        <CustomButton onPress={() => onSignInPress()}>Sign in</CustomButton>
 
         <CustomButton
           text="Forgot password?"

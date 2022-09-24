@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#778899',
     borderRadius: 30,
     padding: 15,
+    opacity: 0.8,
   },
   text: {
     fontSize: 20,

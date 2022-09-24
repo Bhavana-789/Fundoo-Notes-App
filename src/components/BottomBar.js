@@ -22,35 +22,29 @@ import Entypo from 'react-native-vector-icons/Entypo';
 const BottomBar = () => {
   const navigation = useNavigation();
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <TouchableOpacity style={{marginLeft: 20}} onPress={() => {}}>
-          <MaterialIcons name="done-outline" size={25} style={{marginTop: 5}} />
-        </TouchableOpacity>
+    <View style={styles.container}>
+      <TouchableOpacity style={{marginLeft: 20}} onPress={() => {}}>
+        <MaterialIcons name="done-outline" size={25} />
+      </TouchableOpacity>
 
-        <TouchableOpacity style={{marginLeft: 20}} onPress={() => {}}>
-          <Ionicons name="brush" size={25} style={{marginTop: 5}} />
-        </TouchableOpacity>
+      <TouchableOpacity style={{marginLeft: 20}} onPress={() => {}}>
+        <Ionicons name="brush" size={25} />
+      </TouchableOpacity>
 
-        <TouchableOpacity style={{marginLeft: 20}} onPress={() => {}}>
-          <MaterialCommunityIcons
-            name="microphone-outline"
-            size={26}
-            style={{marginTop: 5}}
-          />
-        </TouchableOpacity>
+      <TouchableOpacity style={{marginLeft: 20}} onPress={() => {}}>
+        <MaterialCommunityIcons name="microphone-outline" size={26} />
+      </TouchableOpacity>
 
-        <TouchableOpacity style={{marginLeft: 20}} onPress={() => {}}>
-          <FontAwesome name="image" size={25} style={{marginTop: 5}} />
-        </TouchableOpacity>
+      <TouchableOpacity style={{marginLeft: 20}} onPress={() => {}}>
+        <FontAwesome name="image" size={25} />
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.floatingButton}
-          onPress={() => navigation.navigate('Note')}>
-          <Entypo name="plus" size={32} color={'#2f4f4f'} />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={() => navigation.navigate('Note')}>
+        <Entypo name="plus" size={38} color={'#2f4f4f'} />
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -64,23 +58,25 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     borderWidth: 1,
     borderColor: 'white',
-    marginTop: 5,
+    marginTop: 6,
     marginBottom: 10,
+    opacity: 0.8,
+    alignItems: 'center',
   },
   floatingButton: {
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.2)',
+    borderWidth: 7,
+    borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 60,
+    width: 80,
     position: 'absolute',
     bottom: 10,
     right: 10,
-    height: 60,
+    height: 80,
     backgroundColor: '#00ced1',
     borderRadius: 100,
     marginBottom: 15,
-    marginRight: 15,
+    marginRight: 5,
   },
 });
 
