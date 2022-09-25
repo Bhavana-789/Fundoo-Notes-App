@@ -13,26 +13,41 @@ import {AuthContext} from '../navigation/AuthProvider';
 import {addNotes, updateNote} from '../services/NotesFirebaseServices';
 
 const NoteScreen = ({navigation, route, item}) => {
-  console.log(route);
   const data = route.params;
   const {user} = useContext(AuthContext);
-  console.log(data);
+  console.log('params', data);
 
   const [title, setTitle] = useState(data?.title || '');
   const [note, setNote] = useState(data?.note || '');
   const [isPinned, setIsPinned] = useState(data?.isPinned || false);
+  const [isArchived, setIsArchived] = useState(data?.isArchived || false);
 
   const onBackPress = async () => {
+    // old note
     if (title !== '' || note !== '') {
-      let addedData = await addNotes(user.uid, title, note, isPinned);
+      let addedData = !data
+        ? await addNotes(user.uid, title, note, isPinned, isArchived)
+        : await updateNote(data.id, title, note);
+
       if (addedData) {
         navigation.navigate('Home');
         console.log('Note Added');
         setTitle(null);
         setNote(null);
         setIsPinned(false);
+        setIsArchived(false);
       }
     }
+    //   } else {
+    //     navigation.navigate('Home');
+    //     setTitle(null);
+    //     setNote(null);
+    //     setIsPinned(false);
+    //     setIsArchived(false);
+    //   }
+    // } else {
+    //   // new note
+    // }
     // if (notesId) {
     //   await updateNote(notesId, title, note);
     //   console.log('notes id is:', notesId);
@@ -41,6 +56,12 @@ const NoteScreen = ({navigation, route, item}) => {
 
   function onPinHandle(params) {
     setIsPinned(!isPinned);
+  }
+
+  function onArchivedHandle(params) {
+    setIsArchived(!isArchived);
+
+    onBackPress();
   }
 
   // firestore()
@@ -80,7 +101,9 @@ const NoteScreen = ({navigation, route, item}) => {
           <MaterialCommunityIcons name="bell-outline" size={24} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={{marginLeft: 10, padding: 6}}>
+        <TouchableOpacity
+          onPress={onArchivedHandle}
+          style={{marginLeft: 10, padding: 6}}>
           <Ionicons name="md-archive-outline" size={24} />
         </TouchableOpacity>
       </View>
