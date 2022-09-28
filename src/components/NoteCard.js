@@ -6,17 +6,19 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 const NoteCard = ({item, onDelete}) => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('Note',{...item})}>
-      <View style={styles.container}>
-        <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
-          <Text style={styles.text}>{item.title}</Text>
-          <TouchableOpacity onPress={() => onDelete(item.id)}>
-          <AntDesign name="delete" size={20} style={styles.icon} />
-          </TouchableOpacity>
+    <View>
+      <TouchableOpacity onPress={() => navigation.navigate('Note', {...item})}>
+        <View style={styles.container}>
+          <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
+            <Text style={styles.text}>{item.title}</Text>
+            <TouchableOpacity onPress={() => onDelete(item.id)}>
+              <AntDesign name="delete" size={20} style={styles.icon} />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.noteText}>{item.note}</Text>
         </View>
-        <Text style={styles.noteText}>{item.note}</Text>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 

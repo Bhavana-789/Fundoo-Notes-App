@@ -1,10 +1,8 @@
-import { View, Text, StyleSheet, Platform } from 'react-native';
-import React, { useContext, useState } from 'react';
+import {View, Text, StyleSheet, Platform} from 'react-native';
+import React, {useContext, useState} from 'react';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
-import { AuthContext } from '../navigation/AuthProvider';
-
-
+import {AuthContext} from '../navigation/AuthProvider';
 
 const RegistrationScreen = ({navigation}) => {
   const [firstname, setFirstname] = useState('');
@@ -15,8 +13,6 @@ const RegistrationScreen = ({navigation}) => {
   const [error, setError] = useState('');
 
   const {register} = useContext(AuthContext);
-
-
 
   const onTermsOfUsePressed = () => {
     console.warn('onTermsOfUsePressed');
@@ -34,68 +30,68 @@ const RegistrationScreen = ({navigation}) => {
     console.warn('onSignInFacebook');
   };
 
-  const onRegisterPress = () =>{
+  const onRegisterPress = () => {
     let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
     let tempErrorObj = {};
 
-    if (firstname === ''){
-      tempErrorObj.firstname= "please enter first name";
-    }
-    else if (lastname === ''){
-      tempErrorObj.lastname = "Please enter last name";
-    }
-    else if (email === '' || !reg.test(email)){
-      tempErrorObj.error = "Please enter valid email";
-    }
-    else if (password !== passwordRepeat){
-      tempErrorObj.error = "Password does not match";
-    }
-    else {
-      register(email,password);
+    if (firstname === '') {
+      tempErrorObj.firstname = 'please enter first name';
+    } else if (lastname === '') {
+      tempErrorObj.lastname = 'Please enter last name';
+    } else if (email === '' || !reg.test(email)) {
+      tempErrorObj.email = 'Please enter valid email';
+    } else if (password !== passwordRepeat) {
+      tempErrorObj.password = 'Password does not match';
+    } else {
+      register(email, password);
     }
     setError(tempErrorObj);
-
   };
-
 
   return (
     <View style={styles.body}>
       <Text style={styles.title}>Create an account</Text>
       <CustomInput
-      placeholder="Firstname"
-      value={firstname}
-      setValue={setFirstname}
-      error={error.firstname} />
-
-      <CustomInput
-      placeholder="Lastname"
-      value={lastname}
-      setValue={setLastname} />
-
-      <CustomInput
-      placeholder="Email"
-      value={email}
-      setValue={setEmail}
-      autoCapitalize="none" />
-
-      <CustomInput
-      placeholder="Password"
-      value={password}
-      setValue={setPassword}
-      autoCapitalize="none"
-      secureTextEntry />
-
-      <CustomInput
-      placeholder="Confirm password"
-      value={passwordRepeat}
-      setValue={setPasswordRepeat}
-      autoCapitalize="none"
-      secureTextEntry />
-
-      <CustomButton
-      text="Register"
-      onPress={() =>  onRegisterPress()}
+        placeholder="Firstname"
+        value={firstname}
+        setValue={setFirstname}
+        error={error.firstname}
       />
+
+      <CustomInput
+        placeholder="Lastname"
+        value={lastname}
+        setValue={setLastname}
+        error={error.lastname}
+      />
+
+      <CustomInput
+        placeholder="Email"
+        value={email}
+        setValue={setEmail}
+        autoCapitalize="none"
+        error={error.email}
+      />
+
+      <CustomInput
+        placeholder="Password"
+        value={password}
+        setValue={setPassword}
+        autoCapitalize="none"
+        secureTextEntry
+        error={error.password}
+      />
+
+      <CustomInput
+        placeholder="Confirm password"
+        value={passwordRepeat}
+        setValue={setPasswordRepeat}
+        autoCapitalize="none"
+        secureTextEntry
+        error={error.passwordRepeat}
+      />
+
+      <CustomButton text="Register" onPress={() => onRegisterPress()} />
 
       <Text style={styles.text}>
         By registering, you confirm that you accept our{' '}
@@ -108,23 +104,27 @@ const RegistrationScreen = ({navigation}) => {
         </Text>
       </Text>
 
-
-    {Platform.OS === 'android' ? (
-      <><CustomButton
-          text="Sign In with Google"
-          onPress={onSignInGoogle}
-          bgColor="#FAE9EA"
-          fgColor="#DD4D44" /><CustomButton
+      {Platform.OS === 'android' ? (
+        <>
+          <CustomButton
+            text="Sign In with Google"
+            onPress={onSignInGoogle}
+            bgColor="#FAE9EA"
+            fgColor="#DD4D44"
+          />
+          <CustomButton
             text="Sign In with Facebook"
             onPress={onSignInFacebook}
             bgColor="#E7EAF4"
-            fgColor="#4765A9" /></>
-    ) : null }
+            fgColor="#4765A9"
+          />
+        </>
+      ) : null}
 
       <CustomButton
-      text="Already Registered? Sign In"
-      onPress={() => navigation.navigate('SignIn')}
-      type="TERTIARY"
+        text="Already Registered? Sign In"
+        onPress={() => navigation.navigate('SignIn')}
+        type="TERTIARY"
       />
     </View>
   );

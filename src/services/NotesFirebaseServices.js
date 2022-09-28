@@ -7,22 +7,22 @@ export async function fetchnotesData() {
     .collection('notes')
     .get()
     .then(querySnapshot => {
-      //console.log('Total notes: ', querySnapshot.size);
-
       querySnapshot.forEach(doc => {
-        const {userId, title, note} = doc.data();
+        const {userId, title, note, isPinned, isArchived} = doc.data();
         list.push({
           id: doc.id,
           userId,
           title,
           note,
+          isPinned,
+          isArchived,
         });
       });
     });
   return list;
 }
 
-export async function addNotes(id, title, note, isPinned) {
+export async function addNotes(id, title, note, isPinned, isArchived) {
   let addedData = null;
   await firestore()
     .collection('notes')
@@ -31,6 +31,7 @@ export async function addNotes(id, title, note, isPinned) {
       title: title,
       note: note,
       isPinned,
+      isArchived,
     })
     .then(() => {
       addedData = true;
@@ -62,13 +63,17 @@ export async function deleteNote(notesId) {
     });
 }
 
-export async function updateNote(notesId, title, note) {
+export async function updateNote(notesId, title, note, isPinned, isArchived) {
+  console.log('notesId updated', notesId);
+
   await firestore()
     .collection('notes')
     .doc(notesId)
     .update({
       title: title,
       note: note,
+      isPinned,
+      isArchived,
     })
     .then(() => {
       console.log('note updated');

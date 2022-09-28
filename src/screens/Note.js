@@ -10,10 +10,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
-import {addNotes, updateNote} from '../services/NotesFirebaseServices';
+import {
+  addNotes,
+  updateNote,
+  archiveNote,
+} from '../services/NotesFirebaseServices';
+import {ForceTouchGesture} from 'react-native-gesture-handler/lib/typescript/handlers/gestures/forceTouchGesture';
 
 const NoteScreen = ({navigation, route, item}) => {
-  const data = route.params;
+  const data = route?.params;
   const {user} = useContext(AuthContext);
   console.log('params', data);
 
@@ -22,46 +27,30 @@ const NoteScreen = ({navigation, route, item}) => {
   const [isPinned, setIsPinned] = useState(data?.isPinned || false);
   const [isArchived, setIsArchived] = useState(data?.isArchived || false);
 
-  const onBackPress = async () => {
+  const onBackPress = async (isArchiveparams = false) => {
     // old note
     if (title !== '' || note !== '') {
       let addedData = !data
         ? await addNotes(user.uid, title, note, isPinned, isArchived)
-        : await updateNote(data.id, title, note);
+        : await updateNote(data?.id, title, note, isPinned, isArchiveparams);
 
-      if (addedData) {
-        navigation.navigate('Home');
-        console.log('Note Added');
-        setTitle(null);
-        setNote(null);
-        setIsPinned(false);
-        setIsArchived(false);
-      }
+      navigation.goBack();
+      console.log('Note Added');
+      setTitle(null);
+      setNote(null);
+      setIsPinned(false);
+      setIsArchived(false);
     }
-    //   } else {
-    //     navigation.navigate('Home');
-    //     setTitle(null);
-    //     setNote(null);
-    //     setIsPinned(false);
-    //     setIsArchived(false);
-    //   }
-    // } else {
-    //   // new note
-    // }
-    // if (notesId) {
-    //   await updateNote(notesId, title, note);
-    //   console.log('notes id is:', notesId);
-    // }
   };
 
-  function onPinHandle(params) {
+  function onPinHandle() {
     setIsPinned(!isPinned);
+    //onBackPress(isPinnedparam);
   }
 
-  function onArchivedHandle(params) {
+  function onArchivedHandle(isArchiveparams) {
     setIsArchived(!isArchived);
-
-    onBackPress();
+    onBackPress(isArchiveparams);
   }
 
   // firestore()
@@ -102,9 +91,12 @@ const NoteScreen = ({navigation, route, item}) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={onArchivedHandle}
+          onPress={() => onArchivedHandle(!isArchived)}
           style={{marginLeft: 10, padding: 6}}>
-          <Ionicons name="md-archive-outline" size={24} />
+          <Ionicons
+            name={isArchived ? 'md-archive' : 'md-archive-outline'}
+            size={24}
+          />
         </TouchableOpacity>
       </View>
 

@@ -35,9 +35,9 @@ const SignInScreen = ({navigation}) => {
     let tempError = {};
 
     if (username === '' || !reg.test(username)) {
-      tempError.firstname = 'please enter first name';
+      tempError.username = 'please enter first name';
     } else if (password === '') {
-      tempError.password = 'Please enter last name';
+      tempError.password = 'Please enter password';
     } else {
       login(username, password);
     }

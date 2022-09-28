@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect, useState} from 'react';
 import {
   Button,
@@ -18,13 +19,41 @@ const HomeScreen = ({navigation}) => {
   const [notes, setNotes] = useState('');
 
   useEffect(() => {
-    getList();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      getList();
+      //unPinnedList();
+      //pinnedList();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+
   const getList = async () => {
     let addedData = await fetchnotesData();
     console.log(addedData);
-    setNotes(addedData);
+    const withoutArchivedData = addedData.filter(
+      item => item.isArchived === false,
+    );
+
+    console.log('without archived data:', withoutArchivedData);
+
+    setNotes(withoutArchivedData);
   };
+
+  // const unPinnedList = async () => {
+  //   let addedData = await fetchnotesData();
+  //   const withoutPinnedData = addedData.filter(item => item.isPinned === false);
+  //   setNotes(withoutPinnedData);
+  // };
+
+  // const pinnedList = async () => {
+  //   let addedData = await fetchnotesData();
+  //   const withPinnedData = addedData.filter(item => item.isPinned === true);
+  //   setNotes(withPinnedData);
+  // };
 
   // useEffect(() => {
   //   const fetchnotesData = async () => {
@@ -98,6 +127,7 @@ const HomeScreen = ({navigation}) => {
             <NoteCard item={item} onDelete={deleteNoteData} />
           )}
           keyExtractor={item => item.id}
+          // numColumns={}
         />
       </View>
       <View style={{flex: 0.1, justifyContent: 'flex-end'}}>
