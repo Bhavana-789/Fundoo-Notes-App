@@ -21,8 +21,6 @@ const ArchiveHeader = () => {
   const {user, logout} = useContext(AuthContext);
   const [visible, setVisible] = useState(false);
 
-  console.log(visible);
-
   const changeVisible = bool => {
     setVisible(bool);
   };

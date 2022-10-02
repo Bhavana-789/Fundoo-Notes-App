@@ -1,21 +1,35 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+//let {width, height} = Dimensions.get('screen');
 
-const NoteCard = ({item, onDelete}) => {
+const NoteCard = ({item, onDelete, layout}) => {
+  if (item.isPinned) {
+    console.log('item is:', item);
+  }
   const navigation = useNavigation();
   return (
-    <View>
+    <View style={{width: layout ? '50%' : '100%'}}>
       <TouchableOpacity onPress={() => navigation.navigate('Note', {...item})}>
         <View style={styles.container}>
           <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
-            <Text style={styles.text}>{item.title}</Text>
-            <TouchableOpacity onPress={() => onDelete(item.id)}>
+            <Text style={layout ? [styles.layoutTitle] : [styles.text]}>
+              {item.title}
+            </Text>
+            {/* <TouchableOpacity onPress={() => onDelete(item)}>
               <AntDesign name="delete" size={20} style={styles.icon} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-          <Text style={styles.noteText}>{item.note}</Text>
+          <Text style={layout ? [styles.layoutNote] : [styles.noteText]}>
+            {item.note}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -40,16 +54,33 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginBottom: 9,
     fontWeight: 'bold',
-    paddingRight: 210,
+    //paddingRight: 280,
+    color: '#2f4f4f',
+    flex: 1,
   },
   noteText: {
     fontSize: 16,
     marginTop: 3,
     marginBottom: 9,
     paddingBottom: 7,
+    color: '#2f4f4f',
   },
   icon: {
     marginTop: 8,
+  },
+  layoutTitle: {
+    flex: 1,
+    margin: 3,
+    fontSize: 16,
+    color: '#2f4f4f',
+    fontWeight: 'bold',
+  },
+  layoutNote: {
+    flex: 1,
+    margin: 3,
+    fontSize: 16,
+    color: '#2f4f4f',
+    fontWeight: 'bold',
   },
 });
 

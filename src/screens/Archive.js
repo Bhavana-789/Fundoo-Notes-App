@@ -34,10 +34,8 @@ const ArchiveScreen = ({navigation}) => {
 
   const getList = async () => {
     let addedData = await fetchnotesData();
-    console.log(addedData);
-    const withArchivedData = addedData.filter(item => item.isArchived === true);
 
-    console.log('withArchivedData ', withArchivedData);
+    const withArchivedData = addedData.filter(item => item.isArchived === true);
 
     setNotes(withArchivedData);
   };

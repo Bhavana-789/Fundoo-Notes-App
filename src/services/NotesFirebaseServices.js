@@ -8,7 +8,8 @@ export async function fetchnotesData() {
     .get()
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
-        const {userId, title, note, isPinned, isArchived} = doc.data();
+        const {userId, title, note, isPinned, isArchived, isDeleted} =
+          doc.data();
         list.push({
           id: doc.id,
           userId,
@@ -16,13 +17,21 @@ export async function fetchnotesData() {
           note,
           isPinned,
           isArchived,
+          isDeleted,
         });
       });
     });
   return list;
 }
 
-export async function addNotes(id, title, note, isPinned, isArchived) {
+export async function addNotes(
+  id,
+  title,
+  note,
+  isPinned,
+  isArchived,
+  isDeleted,
+) {
   let addedData = null;
   await firestore()
     .collection('notes')
@@ -32,6 +41,7 @@ export async function addNotes(id, title, note, isPinned, isArchived) {
       note: note,
       isPinned,
       isArchived,
+      isDeleted,
     })
     .then(() => {
       addedData = true;
@@ -53,17 +63,16 @@ export async function deleteNote(notesId) {
     .catch(e => {
       console.log(e);
     });
-
-  await firestore()
-    .collection('notes')
-    .doc(notesId)
-    .delete()
-    .then(() => {
-      console.log('note deleted');
-    });
 }
 
-export async function updateNote(notesId, title, note, isPinned, isArchived) {
+export async function updateNote(
+  notesId,
+  title,
+  note,
+  isPinned,
+  isArchived,
+  isDeleted,
+) {
   console.log('notesId updated', notesId);
 
   await firestore()
@@ -74,6 +83,7 @@ export async function updateNote(notesId, title, note, isPinned, isArchived) {
       note: note,
       isPinned,
       isArchived,
+      isDeleted,
     })
     .then(() => {
       console.log('note updated');

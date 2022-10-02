@@ -16,13 +16,10 @@ import ModalPopup from './ModalPopup';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile1 from '../assets/images/profile1.png';
 
-const TopBar = () => {
-
+const TopBar = ({changeLayout}) => {
   const navigation = useNavigation();
   const {user, logout} = useContext(AuthContext);
   const [visible, setVisible] = useState(false);
-
-  console.log(visible);
 
   const changeVisible = bool => {
     setVisible(bool);
@@ -41,11 +38,17 @@ const TopBar = () => {
               <Text style={styles.text}>Search your notes</Text>
             </TouchableOpacity>
           </View>
+
           <View style={{paddingLeft: 60}}>
-            <Ionicons name="grid-outline" size={27} color={'white'} />
+            <TouchableOpacity onPress={() => changeLayout()}>
+              <Ionicons name="grid-outline" size={27} color={'white'} />
+            </TouchableOpacity>
           </View>
+
           <View>
-            <TouchableOpacity onPress={() =>changeVisible(true)} style={styles.button}>
+            <TouchableOpacity
+              onPress={() => changeVisible(true)}
+              style={[styles.button]}>
               <Image
                 source={profile1}
                 style={{width: 80, height: 30, resizeMode: 'contain'}}
@@ -57,11 +60,8 @@ const TopBar = () => {
               animationType="slide"
               visible={visible}
               onRequestClose={() => changeVisible(false)}>
-                <ModalPopup
-                changeVisible={changeVisible}/>
-
-              </Modal>
-
+              <ModalPopup changeVisible={changeVisible} />
+            </Modal>
           </View>
         </View>
       </View>
