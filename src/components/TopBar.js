@@ -15,8 +15,9 @@ import Feather from 'react-native-vector-icons/Feather';
 import ModalPopup from './ModalPopup';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile1 from '../assets/images/profile1.png';
+import {TextInput} from 'react-native-gesture-handler';
 
-const TopBar = ({changeLayout}) => {
+const TopBar = ({changeLayout, searchNote}) => {
   const navigation = useNavigation();
   const {user, logout} = useContext(AuthContext);
   const [visible, setVisible] = useState(false);
@@ -34,12 +35,17 @@ const TopBar = ({changeLayout}) => {
           </TouchableOpacity>
           <View>
             <TouchableOpacity
+              style={{height: 35, fontSize: 25}}
               onPress={() => navigation.navigate('SearchScreen')}>
-              <Text style={styles.text}>Search your notes</Text>
+              <TextInput
+                onChangeText={searchNote}
+                style={styles.text}
+                placeholder="Search your notes"
+              />
             </TouchableOpacity>
           </View>
 
-          <View style={{paddingLeft: 60}}>
+          <View style={{paddingLeft: 60, flex: 1}}>
             <TouchableOpacity onPress={() => changeLayout()}>
               <Ionicons name="grid-outline" size={27} color={'white'} />
             </TouchableOpacity>
@@ -48,7 +54,7 @@ const TopBar = ({changeLayout}) => {
           <View>
             <TouchableOpacity
               onPress={() => changeVisible(true)}
-              style={[styles.button]}>
+              style={styles.button}>
               <Image
                 source={profile1}
                 style={{width: 80, height: 30, resizeMode: 'contain'}}
@@ -88,8 +94,9 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   text: {
-    fontSize: 20,
-    paddingLeft: 15,
+    fontSize: 14,
+    //backgroundColor: 'red',
+
     color: 'white',
   },
   emailText: {

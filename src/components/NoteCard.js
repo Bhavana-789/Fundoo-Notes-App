@@ -4,20 +4,57 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {deleteNote, updateNote} from '../services/NotesFirebaseServices';
+import {onChange} from 'react-native-reanimated';
 //let {width, height} = Dimensions.get('screen');
 
 const NoteCard = ({item, onDelete, layout}) => {
   if (item.isPinned) {
     console.log('item is:', item);
   }
+
+  const onLongClick = () => {
+    let {id, isPinned, isArchived, isDeleted, note, title} = item;
+    Alert.alert(
+      'Alert',
+      'Do you want to delete this note?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => onDelete(),
+        },
+        {
+          text: 'Restore',
+          onPress: () =>
+            updateNote(id, title, note, isPinned, isArchived, false),
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          Alert.alert(
+            'This alert was dismissed by tapping outside of the alert dialog.',
+          ),
+      },
+    );
+  };
+
   const navigation = useNavigation();
   return (
     <View style={{width: layout ? '50%' : '100%'}}>
-      <TouchableOpacity onPress={() => navigation.navigate('Note', {...item})}>
+      <TouchableOpacity
+        onLongPress={() => (onDelete ? onLongClick() : null)}
+        onPress={() => navigation.navigate('Note', {...item})}>
         <View style={styles.container}>
           <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
             <Text style={layout ? [styles.layoutTitle] : [styles.text]}>

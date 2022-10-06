@@ -58,7 +58,7 @@ export async function deleteNote(notesId) {
     .doc(notesId)
     .delete()
     .then(() => {
-      console.log('note deleted!');
+      alert('Note deleted!');
     })
     .catch(e => {
       console.log(e);

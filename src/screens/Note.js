@@ -45,14 +45,17 @@ const NoteScreen = ({navigation, route, item}) => {
             isArchiveparams,
             isDeletedparams,
           );
-
-      navigation.goBack();
-      console.log('Note Added');
-      setTitle(null);
-      setNote(null);
-      setIsPinned(false);
-      setIsArchived(false);
+      setDefaultValues();
     }
+  };
+
+  const setDefaultValues = () => {
+    navigation.goBack();
+    console.log('Note Added');
+    setTitle(null);
+    setNote(null);
+    setIsPinned(false);
+    setIsArchived(false);
   };
 
   function onPinHandle(isPinnedparam) {

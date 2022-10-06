@@ -15,6 +15,7 @@ import BottomBar from '../components/BottomBar';
 import firestore from '@react-native-firebase/firestore';
 import NoteCard from '../components/NoteCard';
 import {fetchnotesData, deleteNote} from '../services/NotesFirebaseServices';
+import {get} from 'react-native/Libraries/Utilities/PixelRatio';
 
 const HomeScreen = ({navigation}) => {
   const [notes, setNotes] = useState([]);
@@ -50,6 +51,18 @@ const HomeScreen = ({navigation}) => {
 
     setNotes(withoutArchivedData);
     setPinnedNotes(PinnedData);
+  };
+
+  const searchNote = text => {
+    if (text.length === 0) {
+      getList();
+      return;
+    }
+    let _others = notes.filter(item => item.title.includes(text));
+    let _pinNote = pinnedNotes.filter(item => item.title.includes(text));
+    setNotes(_others);
+    setPinnedNotes(_pinNote);
+    console.log('search is:', text);
   };
 
   // const unPinnedList = async () => {
@@ -131,7 +144,7 @@ const HomeScreen = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 0.1}}>
-        <TopBar changeLayout={changeLayout} />
+        <TopBar changeLayout={changeLayout} searchNote={searchNote} />
       </View>
       <ScrollView style={{flex: 0.8}}>
         <FlatList

@@ -30,7 +30,7 @@ const ArchiveHeader = () => {
       <View style={styles.container}>
         <View style={styles.inputContainer}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <Feather name="menu" size={28} color={'white'} />
+            <Feather name="menu" size={28} color={'black'} />
           </TouchableOpacity>
           <View>
             <TouchableOpacity
@@ -39,7 +39,7 @@ const ArchiveHeader = () => {
             </TouchableOpacity>
           </View>
           <View style={{paddingLeft: 110}}>
-            <Ionicons name="grid-outline" size={27} color={'white'} />
+            <Ionicons name="grid-outline" size={27} color={'black'} />
           </View>
         </View>
       </View>
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 0,
     flexDirection: 'row',
-    backgroundColor: '#778899',
+    backgroundColor: '#e9e9e9',
     borderRadius: 0,
     padding: 15,
     opacity: 0.8,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     paddingLeft: 100,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
   },
   emailText: {

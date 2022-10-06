@@ -1,10 +1,11 @@
-import { View, Text } from 'react-native';
+import {View, Text} from 'react-native';
 import React from 'react';
+import LabelHeader from '../components/LabelHeader';
 
 const LabelScreen = () => {
   return (
     <View>
-      <Text>Create new label</Text>
+      <LabelHeader />
     </View>
   );
 };
