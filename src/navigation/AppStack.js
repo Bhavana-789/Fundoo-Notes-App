@@ -7,6 +7,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import DrawerNavigation from './DrawerNavigation';
 import Search from '../screens/Search';
 import Note from '../screens/Note';
+import LabelList from '../components/LabelList';
+
+//import LabelStack from './LabelStack';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +28,12 @@ const AppStack = () => {
       />
       <Stack.Screen
         name="Note"
-        component= {Note}
+        component={Note}
+        option={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LabelList"
+        component={LabelList}
         option={{headerShown: false}}
       />
     </Stack.Navigator>

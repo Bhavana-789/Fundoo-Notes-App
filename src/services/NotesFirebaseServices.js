@@ -1,26 +1,44 @@
 import firestore from '@react-native-firebase/firestore';
+import {userId} from '../navigation/AuthProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const dataBase = firestore().collection('UserDetails');
 
 export async function fetchnotesData() {
   const list = [];
+  let uid = await AsyncStorage.getItem('uid');
 
-  await firestore()
+  await dataBase
+    .doc(uid)
     .collection('notes')
     .get()
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
-        const {userId, title, note, isPinned, isArchived, isDeleted} =
-          doc.data();
-        list.push({
-          id: doc.id,
-          userId,
+        const {
+          userUid,
           title,
           note,
           isPinned,
           isArchived,
           isDeleted,
+          labelsArray,
+        } = doc.data();
+        list.push({
+          id: doc.id,
+          userUid,
+          title,
+          note,
+          isPinned,
+          isArchived,
+          isDeleted,
+          labelsArray,
         });
       });
+    })
+    .catch(error => {
+      console.log('something went wrong');
     });
+
   return list;
 }
 
@@ -31,9 +49,12 @@ export async function addNotes(
   isPinned,
   isArchived,
   isDeleted,
+  labelsArray,
 ) {
+  let uid = await AsyncStorage.getItem('uid');
   let addedData = null;
-  await firestore()
+  await dataBase
+    .doc(uid)
     .collection('notes')
     .add({
       userId: id,
@@ -42,6 +63,7 @@ export async function addNotes(
       isPinned,
       isArchived,
       isDeleted,
+      labelsArray,
     })
     .then(() => {
       addedData = true;
@@ -53,7 +75,9 @@ export async function addNotes(
 }
 
 export async function deleteNote(notesId) {
-  await firestore()
+  let uid = await AsyncStorage.getItem('uid');
+  await dataBase
+    .doc(uid)
     .collection('notes')
     .doc(notesId)
     .delete()
@@ -72,18 +96,22 @@ export async function updateNote(
   isPinned,
   isArchived,
   isDeleted,
+  labelsArray,
 ) {
+  let uid = await AsyncStorage.getItem('uid');
   console.log('notesId updated', notesId);
 
-  await firestore()
+  await dataBase
+    .doc(uid)
     .collection('notes')
     .doc(notesId)
     .update({
-      title: title,
-      note: note,
+      title,
+      note,
       isPinned,
       isArchived,
       isDeleted,
+      labelsArray,
     })
     .then(() => {
       console.log('note updated');

@@ -4,91 +4,69 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import firestore from '@react-native-firebase/firestore';
-import {AuthContext} from '../navigation/AuthProvider';
-import NotesBottomBar from '../components/NotesBottomBar';
+import {AuthContext, userId} from '../navigation/AuthProvider';
+import NotesBottom from '../components/NotesBottomBar';
+import {Chip} from 'react-native-paper';
 import {
   addNotes,
   updateNote,
   archiveNote,
 } from '../services/NotesFirebaseServices';
-import {ForceTouchGesture} from 'react-native-gesture-handler/lib/typescript/handlers/gestures/forceTouchGesture';
 
 const NoteScreen = ({navigation, route, item}) => {
   const data = route?.params;
   const {user} = useContext(AuthContext);
+  console.log('user is', user);
 
   const [title, setTitle] = useState(data?.title || '');
   const [note, setNote] = useState(data?.note || '');
   const [isPinned, setIsPinned] = useState(data?.isPinned || false);
   const [isArchived, setIsArchived] = useState(data?.isArchived || false);
   const [isDeleted, setIsDeleted] = useState(data?.isDeleted || false);
+  const [labelsArray, setLabelsArray] = useState(data?.labelsArray || []);
 
-  const onBackPress = async (
-    isArchiveparams = false,
-    isPinedparams = false,
-    isDeletedparams = false,
-  ) => {
-    // old note
+  const onBackPress = async () => {
+    console.log('++++++++++++', isPinned);
     if (title !== '' || note !== '') {
-      let addedData = !data
-        ? await addNotes(user.uid, title, note, isPinned, isArchived, isDeleted)
+      !data
+        ? await addNotes(
+            user.uid,
+            title,
+            note,
+            isPinned,
+            isArchived,
+            isDeleted,
+            [],
+          )
         : await updateNote(
             data?.id,
             title,
             note,
-            isPinedparams,
-            isArchiveparams,
-            isDeletedparams,
+            isPinned,
+            isArchived,
+            isDeleted,
+            labelsArray,
           );
-      setDefaultValues();
     }
-  };
-
-  const setDefaultValues = () => {
     navigation.goBack();
-    console.log('Note Added');
-    setTitle(null);
-    setNote(null);
-    setIsPinned(false);
-    setIsArchived(false);
   };
 
-  function onPinHandle(isPinnedparam) {
+  function onPinHandle() {
     setIsPinned(!isPinned);
-    onBackPress(isArchived, isPinnedparam, isDeleted);
   }
 
-  function onArchivedHandle(isArchiveparams) {
+  function onArchivedHandle() {
     setIsArchived(!isArchived);
-    onBackPress(isArchiveparams, isPinned, isDeleted);
   }
 
-  function onDeletedHandle(isDeletedparams) {
+  function onDeletedHandle() {
     setIsDeleted(!isDeleted);
-    onBackPress(isArchived, isPinned, isDeletedparams);
   }
-
-  // firestore()
-  //   .collection('notes')
-  //   .add({
-  //     userId: user.uid,
-  //     title: title,
-  //     note: note,
-  //   })
-  //   .then(() => {
-  //     navigation.navigate('Home');
-  //     console.log('Note Added');
-  //     setTitle(null);
-  //     setNote(null);
-  //   })
-  //   .catch(error => {
-  //     console.log('Something went wrong');
-  //   });
 
   return (
     <View style={{padding: 10, paddingTop: 50, flex: 0.1}}>
@@ -99,7 +77,7 @@ const NoteScreen = ({navigation, route, item}) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => onPinHandle(!isPinned)}
+          onPress={() => onPinHandle()}
           style={{marginLeft: 200, padding: 7}}>
           <MaterialCommunityIcons
             name={isPinned ? 'pin' : 'pin-outline'}
@@ -117,7 +95,7 @@ const NoteScreen = ({navigation, route, item}) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => onArchivedHandle(!isArchived)}
+          onPress={() => onArchivedHandle()}
           style={{marginLeft: 10, padding: 6}}>
           <Ionicons
             name={isArchived ? 'md-archive' : 'md-archive-outline'}
@@ -126,22 +104,39 @@ const NoteScreen = ({navigation, route, item}) => {
           />
         </TouchableOpacity>
       </View>
+      <SafeAreaView>
+        <TextInput
+          style={styles.titleInput}
+          placeholder="Title"
+          value={title}
+          onChangeText={content => setTitle(content)}
+        />
+        <TextInput
+          style={styles.noteInput}
+          placeholder="Note"
+          multiline={true}
+          value={note}
+          onChangeText={content => setNote(content)}
+        />
+      </SafeAreaView>
+      <View style={{flexDirection: 'row', marginBottom: 10}}>
+        {labelsArray.map(labels => {
+          return (
+            <View key={labels}>
+              <Chip style={styles.chipCard} mode="outlined" elevated={true}>
+                {labels}
+              </Chip>
+            </View>
+          );
+        })}
+      </View>
 
-      <TextInput
-        style={styles.titleInput}
-        placeholder="Title"
-        value={title}
-        onChangeText={content => setTitle(content)}
-      />
-      <TextInput
-        style={styles.noteInput}
-        placeholder="Note"
-        multiline={true}
-        value={note}
-        onChangeText={content => setNote(content)}
-      />
       <View style={styles.bottomcontainer}>
-        <NotesBottomBar deleteNote={() => onDeletedHandle(!isDeleted)} />
+        <NotesBottom
+          navigation={navigation}
+          deleteNote={() => onDeletedHandle()}
+          data={data}
+        />
       </View>
     </View>
   );
@@ -175,6 +170,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     bottom: -620,
+  },
+  chipCard: {
+    borderWidth: 2,
+    margin: 3,
+    borderRadius: 20,
   },
 });
 

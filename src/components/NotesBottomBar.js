@@ -3,6 +3,9 @@ import React, {Component} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import BottomPopup from './BottomPopup';
+// import {connect} from 'react-redux';
+// import {getLabels} from '../redux/action';
+// import {bindActionCreators} from 'redux';
 
 export default class NotesBottom extends Component {
   constructor(props) {
@@ -10,6 +13,7 @@ export default class NotesBottom extends Component {
     this.state = {
       isShown: false,
     };
+    console.log(this.props);
   }
 
   close = () => {
@@ -19,6 +23,7 @@ export default class NotesBottom extends Component {
   };
 
   render() {
+    const {navigation, data} = this.props;
     const {isShown} = this.state;
     return (
       <View style={styles.container}>
@@ -40,9 +45,11 @@ export default class NotesBottom extends Component {
           <Ionicons name="ellipsis-vertical" size={25} color={'#2f4f4f'} />
         </TouchableOpacity>
         <BottomPopup
+          navigation={navigation}
           show={isShown}
           deleteNote={this.props.deleteNote}
           closePopup={this.close}
+          data={data}
         />
       </View>
     );
@@ -60,3 +67,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+// const mapStateToProps = state => ({
+//   labels: state,
+// });
+
+// const ActionCreators = Object.assign({}, getLabels);
+// const mapDispatchToProps = dispatch => ({
+//   actions: bindActionCreators(ActionCreators, dispatch),
+// });
+
+// export default connect(mapStateToProps, mapDispatchToProps)(NotesBottom);

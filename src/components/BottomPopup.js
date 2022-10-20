@@ -11,15 +11,18 @@ import {
 import React, {Component} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+//import {withNavigation} from 'react-navigation';
+import {createStackNavigator, createAppContainer} from 'react-navigation';
 
-export default class BottomPopup extends Component {
+class BottomPopup extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
-    const {show, closePopup, deleteNote} = this.props;
+    const {show, closePopup, navigation, deleteNote, data} = this.props;
+
     return (
       <View>
         <Modal animationType="fade" transparent={true} visible={show}>
@@ -44,15 +47,18 @@ export default class BottomPopup extends Component {
                 />
                 <Text style={styles.txt}>Delete</Text>
               </TouchableOpacity>
-              <View style={styles.iconView}>
-                <MaterialIcons
-                  name="label-outline"
-                  size={22}
-                  color={'black'}
-                  style={{padding: 10}}
-                />
-                <Text style={styles.txt}>Labels</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('LabelList', data)}>
+                <View style={styles.iconView}>
+                  <MaterialIcons
+                    name="label-outline"
+                    size={24}
+                    color={'black'}
+                    style={{padding: 10}}
+                  />
+                  <Text style={styles.txt}>Labels</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -93,3 +99,5 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
 });
+
+export default BottomPopup;

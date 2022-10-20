@@ -1,5 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
+
 import {
   Button,
   FlatList,
@@ -16,34 +19,52 @@ import firestore from '@react-native-firebase/firestore';
 import NoteCard from '../components/NoteCard';
 import {fetchnotesData, deleteNote} from '../services/NotesFirebaseServices';
 
-const HomeScreen = ({navigation}) => {
+const LabelDrawerScreen = ({navigation, route}) => {
   const [notes, setNotes] = useState([]);
   const [pinnedNotes, setPinnedNotes] = useState([]);
   const [layout, setLayout] = useState(false);
+  console.log('********', route.params);
+
+  //const isFocused = useIsFocused();
+  // let abc = route.params.isFocus;
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // The screen is focused
-      // Call any action
-      getList();
-    });
+    console.log('dddddddd');
+    //const unsubscribe = navigation.addListener('focus', () => {
+    // The screen is focused
+    // Call any action
+    getList();
+    //});
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
-    return unsubscribe;
-  }, [navigation]);
+    //return unsubscribe;
+  }, [route.params.label]);
+
+  //const addTodo = useCallback(() => { setTodos((t) => [...t, "New Todo"]); }, [todos]);
+
+  // useEffect(() => {
+  //   if (navigation.isDrawerOpen) {
+  //     getList();
+  //   }
+  // }, [navigation.isDrawerOpen]);
 
   const getList = async () => {
+    console.log('ooooooooooo');
     let addedData = await fetchnotesData();
 
     const withoutArchivedData = addedData.filter(
-      item =>
-        item.isArchived === false &&
-        item.isPinned === false &&
-        item.isDeleted === false,
+      item => item.labelsArray.indexOf(route.params.label) !== -1,
+      // item.isArchived === false &&
+      //item.isPinned === false &&
+      // item.isDeleted === false &&
     );
 
     const PinnedData = addedData.filter(
-      item => item.isPinned && !item.isArchived && !item.isDeleted,
+      item =>
+        item.isPinned &&
+        !item.isArchived &&
+        !item.isDeleted &&
+        item.labelsArray.indexOf(route.params.label) !== -1,
     );
 
     setNotes(withoutArchivedData);
@@ -62,92 +83,33 @@ const HomeScreen = ({navigation}) => {
     console.log('search is:', text);
   };
 
-  // const unPinnedList = async () => {
-  //   let addedData = await fetchnotesData();
-  //   const withoutPinnedData = addedData.filter(item => item.isPinned === false);
-  //   setNotes(withoutPinnedData);
-  // };
-
-  // const pinnedList = async () => {
-  //   let addedData = await fetchnotesData();
-  //   const withPinnedData = addedData.filter(item => item.isPinned === true);
-  //   setNotes(withPinnedData);
-  // };
-
-  // useEffect(() => {
-  //   const fetchnotesData = async () => {
-  //     try {
-  //       const list = [];
-
-  //       await firestore()
-  //         .collection('notes')
-  //         .get()
-  //         .then(querySnapshot => {
-  //           //console.log('Total notes: ', querySnapshot.size);
-
-  //           querySnapshot.forEach(doc => {
-  //             const {userId, title, note} = doc.data();
-  //             list.push({
-  //               id: doc.id,
-  //               userId,
-  //               title,
-  //               note,
-  //             });
-  //           });
-  //         });
-
-  //       setNotes(list);
-
-  //       //console.log(notes);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-
-  //   fetchnotesData();
-  // }, []);
-
-  const deleteNoteData = notesId => {
-    console.log('note id is', notesId);
-    deleteNote(notesId);
-  };
-
   const changeLayout = () => {
     setLayout(!layout);
   };
 
-  // firestore()
-  //   .collection('notes')
-  //   .doc(notesId)
-  //   .delete()
-  //   .then(() => {
-  //     console.log('note deleted!');
-  //     deleteFirestoreData(notesId);
-  //   })
-  //   .catch(e => {
-  //     console.log(e);
-  //   });
-
-  // const deleteFirestoreData = notesId => {
-  //   firestore()
-  //     .collection('notes')
-  //     .doc(notesId)
-  //     .delete()
-  //     .then(() => {
-  //       console.log('note deleted');
-  //     });
-  // };
+  // if (abc) {
+  //   getList();
+  //   abc = false;
+  // }
 
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 0.1}}>
-        <TopBar changeLayout={changeLayout} searchNote={searchNote} />
+        <TopBar
+          changeLayout={changeLayout}
+          searchNote={searchNote}
+          defaulttext={route.params.label}
+        />
       </View>
       <ScrollView style={{flex: 0.8}}>
         <FlatList
           data={pinnedNotes}
           renderItem={({item}) => <NoteCard item={item} layout={layout} />}
-          ListHeaderComponent={<Text style={styles.pinText}>PINNED</Text>}
+          ListHeaderComponent={
+            pinnedNotes.length > 0 ? (
+              <Text style={styles.pinText}>PINNED</Text>
+            ) : null
+          }
           keyExtractor={item => item.id}
           numColumns={layout ? 2 : 1}
           scrollEnabled={false}
@@ -164,9 +126,9 @@ const HomeScreen = ({navigation}) => {
           key={layout ? 3 : 4}
         />
       </ScrollView>
-      <View style={{flex: 0.1, justifyContent: 'flex-end'}}>
+      {/* <View style={{flex: 0.1, justifyContent: 'flex-end'}}>
         <BottomBar />
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -199,4 +161,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default LabelDrawerScreen;

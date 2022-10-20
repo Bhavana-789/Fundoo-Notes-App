@@ -19,7 +19,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 const WIDTH = Dimensions.get('window').width;
 //const HEIGHT_MODAL = 150;
 const ModalPopup = props => {
-  const [image, setImage] = useState(profile1);
+  // const [image, setImage] = useState(profile1);
   const [modalVisible, setModalVisible] = useState(false);
 
   const {user, logout} = useContext(AuthContext);
@@ -39,8 +39,9 @@ const ModalPopup = props => {
       cropping: true,
     })
       .then(imageData => {
-        console.log(image);
-        setImage(imageData.path);
+        //console.log(image);
+        //setImage(imageData.path);
+        props.setProfile(imageData.path);
       })
       .catch(e => {
         console.log(e);
@@ -54,8 +55,9 @@ const ModalPopup = props => {
       cropping: true,
     })
       .then(imageData => {
-        console.log(image);
-        setImage(imageData.path);
+        // console.log(image);
+        //setImage(imageData.path);
+        props.setProfile(imageData.path);
       })
       .catch(e => {
         console.log(e);
@@ -73,7 +75,13 @@ const ModalPopup = props => {
           </TouchableOpacity>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <ImageBackground style={styles.image} source={image}>
+          <ImageBackground
+            style={styles.image}
+            source={
+              props.profile
+                ? {uri: props.profile}
+                : require('../assets/images/profile1.png')
+            }>
             <View>
               <TouchableOpacity onPress={() => openModal(true)}>
                 <Ionicons

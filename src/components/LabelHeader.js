@@ -4,8 +4,6 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
-  Image,
-  Modal,
   TextInput,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
@@ -13,16 +11,25 @@ import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../navigation/AuthProvider';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
-import ModalPopup from './ModalPopup';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import profile1 from '../assets/images/profile1.png';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {addLabel} from '../services/LabelsFirebaseServices';
+import {useDispatch} from 'react-redux';
 
-const LabelHeader = () => {
+const LabelHeader = ({dispatchData, route}) => {
+  const data = route?.params;
+
   const navigation = useNavigation();
   const [label, setLabel] = useState('');
   const [cancel, setCancel] = useState(false);
   const [save, setSave] = useState(false);
+  const {user} = useContext(AuthContext);
+
+  const onSavePress = () => {
+    if (label !== '') {
+      addLabel(user.uid, label).then(dispatchData());
+      setLabel('');
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -74,22 +81,16 @@ const LabelHeader = () => {
           //onFocus={handleFocus}
           //onBlur={handleBlur}
         />
-        {/* <TextInput
-          styles={styles.input}
-          value={label}
-          onChangeText={content => setLabel(content)}
-          placeholder="Create new label"
-          //onFocus={handleFocus}
-          //onBlur={handleBlur}
-        /> */}
         <View>
           {save ? (
             <MaterialIcons
-              style={{marginTop: 15, flex: 1, marginLeft: 185}}
+              style={{marginTop: 15, flex: 1, marginLeft: 180}}
               name="done"
               size={24}
               color="black"
-              onPress={() => {}}
+              onPress={() => {
+                onSavePress();
+              }}
             />
           ) : null}
         </View>

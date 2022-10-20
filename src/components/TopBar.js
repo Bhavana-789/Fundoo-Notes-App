@@ -17,14 +17,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile1 from '../assets/images/profile1.png';
 import {TextInput} from 'react-native-gesture-handler';
 
-const TopBar = ({changeLayout, searchNote}) => {
+const TopBar = ({changeLayout, searchNote, defaulttext}) => {
   const navigation = useNavigation();
   const {user, logout} = useContext(AuthContext);
   const [visible, setVisible] = useState(false);
+  const [profile, setProfile] = useState('');
 
   const changeVisible = bool => {
     setVisible(bool);
   };
+  console.log('--------', user);
 
   return (
     <SafeAreaView>
@@ -35,17 +37,32 @@ const TopBar = ({changeLayout, searchNote}) => {
           </TouchableOpacity>
           <View>
             <TouchableOpacity
-              style={{height: 35, fontSize: 25}}
+              style={{height: 35, fontSize: 20}}
               onPress={() => navigation.navigate('SearchScreen')}>
-              <TextInput
-                onChangeText={searchNote}
-                style={styles.text}
-                placeholder="Search your notes"
-              />
+              <SafeAreaView>
+                {defaulttext ? (
+                  <Text
+                    style={{
+                      width: 250,
+                      textAlign: 'center',
+                      paddingTop: 5,
+                      fontSize: 20,
+                      color: 'white',
+                    }}>
+                    {defaulttext}
+                  </Text>
+                ) : (
+                  <TextInput
+                    onChangeText={searchNote}
+                    style={styles.text}
+                    placeholder="Search your notes"
+                  />
+                )}
+              </SafeAreaView>
             </TouchableOpacity>
           </View>
 
-          <View style={{paddingLeft: 60, flex: 1}}>
+          <View style={{paddingLeft: 10, display: 'flex'}}>
             <TouchableOpacity onPress={() => changeLayout()}>
               <Ionicons name="grid-outline" size={27} color={'white'} />
             </TouchableOpacity>
@@ -56,8 +73,16 @@ const TopBar = ({changeLayout, searchNote}) => {
               onPress={() => changeVisible(true)}
               style={styles.button}>
               <Image
-                source={profile1}
-                style={{width: 80, height: 30, resizeMode: 'contain'}}
+                source={
+                  profile
+                    ? {uri: profile}
+                    : require('../assets/images/profile1.png')
+                }
+                style={{
+                  width: 30,
+                  height: 30,
+                  resizeMode: 'contain',
+                }}
               />
             </TouchableOpacity>
 
@@ -66,7 +91,11 @@ const TopBar = ({changeLayout, searchNote}) => {
               animationType="slide"
               visible={visible}
               onRequestClose={() => changeVisible(false)}>
-              <ModalPopup changeVisible={changeVisible} />
+              <ModalPopup
+                changeVisible={changeVisible}
+                setProfile={setProfile}
+                profile={profile}
+              />
             </Modal>
           </View>
         </View>
@@ -92,12 +121,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     padding: 15,
     opacity: 0.8,
+    height: 68,
   },
   text: {
-    fontSize: 14,
+    fontSize: 18,
     //backgroundColor: 'red',
-
+    width: 240,
     color: 'white',
+    paddingVertical: 2,
   },
   emailText: {
     fontSize: 18,

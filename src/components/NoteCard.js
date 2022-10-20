@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {deleteNote, updateNote} from '../services/NotesFirebaseServices';
 import {onChange} from 'react-native-reanimated';
+import {Chip} from 'react-native-paper';
 //let {width, height} = Dimensions.get('screen');
 
 const NoteCard = ({item, onDelete, layout}) => {
@@ -67,6 +68,17 @@ const NoteCard = ({item, onDelete, layout}) => {
           <Text style={layout ? [styles.layoutNote] : [styles.noteText]}>
             {item.note}
           </Text>
+          <View style={{flexDirection: 'row', marginBottom: 10}}>
+            {item.labelsArray.map(labels => {
+              return (
+                <View key={labels}>
+                  <Chip style={styles.chipCard} mode="outlined" elevated={true}>
+                    {labels}
+                  </Chip>
+                </View>
+              );
+            })}
+          </View>
         </View>
       </TouchableOpacity>
     </View>
@@ -118,6 +130,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#2f4f4f',
     fontWeight: 'bold',
+  },
+  chipCard: {
+    borderWidth: 2,
+    margin: 3,
+    borderRadius: 20,
   },
 });
 
