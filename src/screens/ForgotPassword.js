@@ -1,14 +1,11 @@
-
 import React, {useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import CustomButton from '../components/CustomButton';
 
 import CustomInput from '../components/CustomInput';
 
-
 const ForgotPasswordScreen = ({navigation}) => {
   const [username, setUsername] = useState('');
-
 
   return (
     <View style={styles.body}>
@@ -18,12 +15,15 @@ const ForgotPasswordScreen = ({navigation}) => {
         value={username}
         setValue={setUsername}
       />
-      <CustomButton text="Send" onPress={() => navigation.navigate('NewPassword')} />
+      <CustomButton
+        text="Send"
+        onPress={() => navigation.navigate('NewPassword')}
+      />
 
       <CustomButton
-      text="Back to Sign In"
-      onPress={() => navigation.navigate('SignIn')}
-      type="TERTIARY"
+        text="Back to Sign In"
+        onPress={() => navigation.navigate('SignIn')}
+        type="TERTIARY"
       />
     </View>
   );

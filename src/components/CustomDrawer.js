@@ -71,6 +71,7 @@ const CustomDrawer = props => {
             return (
               <TouchableOpacity
                 onPress={() => navigation.navigate('LabelDrawerScreen', item)}
+                key={item.label}
                 style={{flexDirection: 'row', padding: 3, marginLeft: 20}}>
                 <MaterialIcons name="label-outline" size={24} style={{}} />
                 <Text style={{fontSize: 15, marginLeft: 30, color: 'black'}}>

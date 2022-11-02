@@ -16,6 +16,8 @@ import ModalPopup from './ModalPopup';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import profile1 from '../assets/images/profile1.png';
 import {TextInput} from 'react-native-gesture-handler';
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
 
 const TopBar = ({changeLayout, searchNote, defaulttext}) => {
   const navigation = useNavigation();
@@ -119,16 +121,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#778899',
     borderRadius: 30,
-    padding: 15,
+    padding: 17,
     opacity: 0.8,
     height: 68,
   },
   text: {
     fontSize: 18,
-    //backgroundColor: 'red',
     width: 240,
-    color: 'white',
-    paddingVertical: 2,
+    color: 'black',
+    paddingVertical: 1,
+    fontWeight: 'bold',
   },
   emailText: {
     fontSize: 18,
